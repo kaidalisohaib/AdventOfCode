@@ -10,13 +10,9 @@ fn main() {
     println!("Part two answer: {:?}", part_two_answer);
 }
 
-fn solve_part_one(input: &str) {
+fn solve_part_one(input: &str) {}
 
-}
-
-fn solve_part_two(input: &str) {
-
-}
+fn solve_part_two(input: &str) {}
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
