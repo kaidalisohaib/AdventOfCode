@@ -3,7 +3,7 @@ use std::{fs, process};
 fn main() {
     let file_content: String = read_input_file();
     println!("Input:\n{}", file_content);
-
+    println!("========================================");
     let part_one_answer= solve_part_one(&file_content);
     println!("Part one answer: {:?}", part_one_answer);
     let part_two_answer = solve_part_two(&file_content);
