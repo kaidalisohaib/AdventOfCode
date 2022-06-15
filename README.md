@@ -19,7 +19,7 @@
     - [X] Day 15
     - [X] Day 16
     - [X] Day 17
-    - [ ] Day 18
+    - [X] Day 18
     - [ ] Day 19
     - [ ] Day 20
     - [ ] Day 21
