@@ -24,7 +24,7 @@ fn solve_part_one(input: &str) -> u128 {
         &mut group1,
     );
 
-    return calculate_quantum_entanglement(&group1);
+    calculate_quantum_entanglement(&group1)
 }
 
 fn solve_part_two(input: &str) -> u128 {
@@ -41,7 +41,7 @@ fn solve_part_two(input: &str) -> u128 {
         &mut group1,
     );
 
-    return calculate_quantum_entanglement(&group1);
+    calculate_quantum_entanglement(&group1)
 }
 
 fn recursive_combination_group1(
@@ -62,10 +62,9 @@ fn recursive_combination_group1(
             continue;
         }
         if cloned_list.iter().sum::<u32>() == target {
-            if cloned_list.len() < current_group1.len() {
-                *current_group1 = cloned_list;
-            } else if calculate_quantum_entanglement(&cloned_list)
-                < calculate_quantum_entanglement(current_group1)
+            if cloned_list.len() < current_group1.len()
+                || calculate_quantum_entanglement(&cloned_list)
+                    < calculate_quantum_entanglement(current_group1)
             {
                 *current_group1 = cloned_list;
             }
@@ -99,10 +98,10 @@ fn prepare_data(input: &str) -> Vec<u32> {
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
-        Ok(content) => return content,
+        Ok(content) => content,
         Err(err) => {
             eprintln!("Error while opening the input file: {:?}", err);
             process::exit(1);
         }
-    };
+    }
 }

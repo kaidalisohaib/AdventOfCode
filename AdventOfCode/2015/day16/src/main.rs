@@ -3,8 +3,8 @@ use std::{collections::HashMap, fs, process};
 use phf::{phf_map, Map};
 use regex::{Captures, Regex};
 enum SIGN {
-    GREATER_THEN,
-    LESS_THEN,
+    GreaterThen,
+    LessThen,
 }
 
 const MFCSAM_MSG: Map<&'static str, u32> = phf_map! (
@@ -20,7 +20,7 @@ const MFCSAM_MSG: Map<&'static str, u32> = phf_map! (
     "perfumes"=> 1
 ); // My First Crime Scene Analysis Machine
 
-const DONT_CHECK_KEY: Map<&str, SIGN> = phf_map! ("cats" => SIGN::GREATER_THEN, "trees"=> SIGN::GREATER_THEN, "pomeranians"=> SIGN::LESS_THEN, "goldfish"=> SIGN::LESS_THEN);
+const DONT_CHECK_KEY: Map<&str, SIGN> = phf_map! ("cats" => SIGN::GreaterThen, "trees"=> SIGN::GreaterThen, "pomeranians"=> SIGN::LessThen, "goldfish"=> SIGN::LessThen);
 
 fn main() {
     let file_content: String = read_input_file();
@@ -42,27 +42,34 @@ fn solve_part_one(input: &str) -> usize {
         }
         return index + 1;
     }
-    return 0;
+    0
 }
 
 fn solve_part_two(input: &str) -> usize {
     let data: Vec<HashMap<&str, u32>> = prepare_data(input);
-    let mut real_sues: u32 = 0;
+    let _real_sues: u32 = 0;
     'first: for (index, sue) in data.iter().enumerate() {
         for (key, value) in sue {
             if let Some(range) = DONT_CHECK_KEY.get(key) {
                 match range {
-                    SIGN::GREATER_THEN => if *value <= *MFCSAM_MSG.get(key).unwrap()  {continue 'first;},
-                    SIGN::LESS_THEN => if *value >= *MFCSAM_MSG.get(key).unwrap() {continue 'first;},
+                    SIGN::GreaterThen => {
+                        if *value <= *MFCSAM_MSG.get(key).unwrap() {
+                            continue 'first;
+                        }
+                    }
+                    SIGN::LessThen => {
+                        if *value >= *MFCSAM_MSG.get(key).unwrap() {
+                            continue 'first;
+                        }
+                    }
                 }
             } else if *MFCSAM_MSG.get(key).unwrap() != *value {
                 continue 'first;
             }
         }
         return index + 1;
-
     }
-    return 0;
+    0
 }
 
 fn prepare_data(input: &str) -> Vec<HashMap<&str, u32>> {
@@ -90,10 +97,10 @@ fn prepare_data(input: &str) -> Vec<HashMap<&str, u32>> {
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
-        Ok(content) => return content,
+        Ok(content) => content,
         Err(err) => {
             eprintln!("Error while opening the input file: {:?}", err);
             process::exit(1);
         }
-    };
+    }
 }

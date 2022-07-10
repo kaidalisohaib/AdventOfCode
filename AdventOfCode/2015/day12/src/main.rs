@@ -1,5 +1,5 @@
 use json::JsonValue;
-use regex::{Regex};
+use regex::Regex;
 use std::{fs, process};
 
 fn main() {
@@ -26,32 +26,32 @@ fn solve_part_one(input: &str) -> i32 {
         .sum();
 }
 
-fn solve_part_two(input: &str) -> i32{
+fn solve_part_two(input: &str) -> i32 {
     let parsed: json::JsonValue = json::parse(input).unwrap();
     let mut sum: i32 = 0;
     recusively_add(&mut sum, &parsed);
     sum
 }
 
-fn recusively_add(pointer: &mut i32, json_val: &JsonValue){
-    if json_val.is_object(){
-        for (key, value) in json_val.entries(){
-            if value.is_string() && value == "red"{
+fn recusively_add(pointer: &mut i32, json_val: &JsonValue) {
+    if json_val.is_object() {
+        for (_key, value) in json_val.entries() {
+            if value.is_string() && value == "red" {
                 return;
             }
         }
-        for (key, value) in json_val.entries(){
-            if value.is_number(){
+        for (_key, value) in json_val.entries() {
+            if value.is_number() {
                 *pointer += value.as_i32().unwrap();
-            }else if value.is_array() || value.is_object(){
+            } else if value.is_array() || value.is_object() {
                 recusively_add(pointer, value);
             }
         }
-    }else if json_val.is_array(){
+    } else if json_val.is_array() {
         for value in json_val.members() {
-            if value.is_number(){
+            if value.is_number() {
                 *pointer += value.as_i32().unwrap();
-            }else if value.is_array() || value.is_object(){
+            } else if value.is_array() || value.is_object() {
                 recusively_add(pointer, value);
             }
         }
@@ -60,10 +60,10 @@ fn recusively_add(pointer: &mut i32, json_val: &JsonValue){
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
-        Ok(content) => return content,
+        Ok(content) => content,
         Err(err) => {
             eprintln!("Error while opening the input file: {:?}", err);
             process::exit(1);
         }
-    };
+    }
 }

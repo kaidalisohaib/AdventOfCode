@@ -25,16 +25,16 @@ fn solve_part_one(input: &str) -> String {
         }
         increment_password_by_1(&mut characters);
     }
-    return characters
+    characters
         .into_iter()
         .map(|x| String::from(((x + 97) as u8) as char))
         .collect::<Vec<String>>()
-        .join("");
+        .join("")
 }
 
 fn solve_part_two(input: &str) -> String {
     let mut characters: Vec<u16> = input.encode_utf16().map(|x| x - 97).collect();
-    for two_time in 0..2 {
+    for _two_time in 0..2 {
         if is_password_secure(&characters) {
             increment_password_by_1(&mut characters);
         }
@@ -48,11 +48,11 @@ fn solve_part_two(input: &str) -> String {
             increment_password_by_1(&mut characters);
         }
     }
-    return characters
+    characters
         .into_iter()
         .map(|x| String::from(((x + 97) as u8) as char))
         .collect::<Vec<String>>()
-        .join("");
+        .join("")
 }
 
 fn increment_password_by_1(password: &mut Vec<u16>) {
@@ -83,8 +83,9 @@ fn skip_non_allowed_letter(password: &mut Vec<u16>) {
         }
     }
     if let Some(biggest_index_value) = biggest_index_nal {
-        for index in biggest_index_value + 1..password.len() {
-            password[index] = 0;
+        for index in (biggest_index_value + 1)..password.len() {
+            let character: &mut u16 = password.get_mut(index).unwrap();
+            *character = 0;
         }
         password[biggest_index_value] += 1;
     }
@@ -103,7 +104,7 @@ fn is_password_secure(password: &Vec<u16>) -> bool {
     while index_second < password.len() - 1 {
         if password[index_second] == password[index_second + 1]
             && (first_repetetive_letter.is_none()
-                || (!first_repetetive_letter.is_none()
+                || (first_repetetive_letter.is_some()
                     && first_repetetive_letter.unwrap() != password[index_second]))
         {
             first_repetetive_letter = Some(password[index_second]);
@@ -129,15 +130,15 @@ fn is_password_secure(password: &Vec<u16>) -> bool {
         }
     }
 
-    return false;
+    false
 }
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
-        Ok(content) => return content,
+        Ok(content) => content,
         Err(err) => {
             eprintln!("Error while opening the input file: {:?}", err);
             process::exit(1);
         }
-    };
+    }
 }

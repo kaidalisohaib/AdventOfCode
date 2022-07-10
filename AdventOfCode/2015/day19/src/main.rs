@@ -1,10 +1,7 @@
-use std::{
-    collections::{HashMap, HashSet, VecDeque},
-    fs, process,
-};
+use std::{collections::HashSet, fs, process};
 
-use regex::{Captures, Regex};
 use priority_queue::PriorityQueue;
+use regex::{Captures, Regex};
 
 fn main() {
     let file_content: String = read_input_file();
@@ -20,7 +17,7 @@ fn solve_part_one(input: &str) -> usize {
     let (replacements, initial_molecule): (Vec<(&str, &str)>, String) = prepare_data(input);
     let mut all_possibilities: HashSet<String> = HashSet::new();
     for (atom, atom_replacement) in replacements {
-        for (index, matches) in initial_molecule.match_indices(atom) {
+        for (index, _matches) in initial_molecule.match_indices(atom) {
             let mut cloned_initial_molecule: String = initial_molecule.clone();
             cloned_initial_molecule.replace_range(index..(index + atom.len()), atom_replacement);
             all_possibilities.insert(cloned_initial_molecule);
@@ -33,19 +30,26 @@ fn solve_part_two(input: &str) -> u32 {
     let (replacements, medicine_molecule): (Vec<(&str, &str)>, String) = prepare_data(input);
     let goal_molecule: String = String::from("e");
     let mut all_possibilities: HashSet<String> = HashSet::new();
-    let mut next_tries: PriorityQueue<(String, u32),i32> = PriorityQueue::new();
-    next_tries.push((medicine_molecule.clone(), 0), -(medicine_molecule.len()as i32));
+    let mut next_tries: PriorityQueue<(String, u32), i32> = PriorityQueue::new();
+    next_tries.push(
+        (medicine_molecule.clone(), 0),
+        -(medicine_molecule.len() as i32),
+    );
     loop {
         let (next_try, current_step): (String, u32) = next_tries.pop().unwrap().0;
         // I am going to do the inverse to shrink the size of the medicine molecule to "e"
         for (atom, atom_replacement) in &replacements {
             for (index, _) in next_try.match_indices(*atom_replacement) {
                 let mut cloned_initial_molecule: String = next_try.clone();
-                cloned_initial_molecule.replace_range(index..(index + (*atom_replacement).len()), *atom);
+                cloned_initial_molecule
+                    .replace_range(index..(index + (*atom_replacement).len()), *atom);
                 if cloned_initial_molecule == goal_molecule {
                     return current_step + 1;
                 } else if !all_possibilities.contains(&cloned_initial_molecule) {
-                    next_tries.push((cloned_initial_molecule.clone(), current_step + 1), -(cloned_initial_molecule.len() as i32));
+                    next_tries.push(
+                        (cloned_initial_molecule.clone(), current_step + 1),
+                        -(cloned_initial_molecule.len() as i32),
+                    );
                 }
                 all_possibilities.insert(cloned_initial_molecule);
             }
@@ -71,10 +75,10 @@ fn prepare_data(input: &str) -> (Vec<(&str, &str)>, String) {
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
-        Ok(content) => return content,
+        Ok(content) => content,
         Err(err) => {
             eprintln!("Error while opening the input file: {:?}", err);
             process::exit(1);
         }
-    };
+    }
 }

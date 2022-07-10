@@ -11,7 +11,7 @@ fn main() {
     println!("Part two answer: {:?}", part_two_answer);
 }
 
-fn solve_part_one(input: &str) -> usize {
+fn solve_part_one(_input: &str) -> usize {
     let mut houses_presents: Vec<u32> = vec![0; (N / 10) as usize];
     let mut index1: u32 = 1;
     let end1: u32 = N / 10;
@@ -37,10 +37,10 @@ fn solve_part_one(input: &str) -> usize {
             return index + 1;
         }
     }
-    return 0;
+    0
 }
 
-fn solve_part_two(input: &str) -> usize {
+fn solve_part_two(_input: &str) -> usize {
     let mut houses_presents: Vec<u32> = vec![0; (N / 10) as usize];
     let mut index1: u32 = 1;
     let end1: u32 = N / 10;
@@ -71,25 +71,15 @@ fn solve_part_two(input: &str) -> usize {
             return index + 1;
         }
     }
-    return 0;
-}
-
-fn calculate_presents(house_number: u32) -> u32 {
-    let mut presents_sum: u32 = 0;
-    for number in 1..=house_number {
-        if house_number % number == 0 {
-            presents_sum += number * 10;
-        }
-    }
-    presents_sum
+    0
 }
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
-        Ok(content) => return content,
+        Ok(content) => content,
         Err(err) => {
             eprintln!("Error while opening the input file: {:?}", err);
             process::exit(1);
         }
-    };
+    }
 }

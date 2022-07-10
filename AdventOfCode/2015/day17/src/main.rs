@@ -1,4 +1,4 @@
-use std::{fs, process, collections::HashMap};
+use std::{collections::HashMap, fs, process};
 
 const VOLUME_OF_EGGNOG: u32 = 150;
 fn main() {
@@ -14,25 +14,40 @@ fn main() {
 fn solve_part_one(input: &str) -> usize {
     let containers: Vec<u32> = prepare_data(input);
     let mut all_possibilities: Vec<Vec<u32>> = Vec::new();
-    recursive_combination(0, 0, VOLUME_OF_EGGNOG, &containers, Vec::new(), &mut all_possibilities);
+    recursive_combination(
+        0,
+        0,
+        VOLUME_OF_EGGNOG,
+        &containers,
+        Vec::new(),
+        &mut all_possibilities,
+    );
     all_possibilities.len()
 }
 
 fn solve_part_two(input: &str) -> u32 {
     let containers: Vec<u32> = prepare_data(input);
     let mut all_possibilities: Vec<Vec<u32>> = Vec::new();
-    recursive_combination(0, 0, VOLUME_OF_EGGNOG, &containers, Vec::new(), &mut all_possibilities);
+    recursive_combination(
+        0,
+        0,
+        VOLUME_OF_EGGNOG,
+        &containers,
+        Vec::new(),
+        &mut all_possibilities,
+    );
     let mut sizes: HashMap<usize, u32> = HashMap::new();
     for container_combination in all_possibilities {
-        if let Some(value) = sizes.get_mut(&container_combination.len()){
+        if let Some(value) = sizes.get_mut(&container_combination.len()) {
             *value += 1;
-        }else{
+        } else {
             sizes.insert(container_combination.len(), 1);
         }
     }
-    let (mut smallest_container_size, mut number_of_container) : (&usize, &u32) = sizes.iter().next().unwrap();
+    let (mut smallest_container_size, mut number_of_container): (&usize, &u32) =
+        sizes.iter().next().unwrap();
     for (container_size, value) in sizes.iter() {
-        if container_size < smallest_container_size{
+        if container_size < smallest_container_size {
             smallest_container_size = container_size;
             number_of_container = value;
         }
@@ -40,20 +55,33 @@ fn solve_part_two(input: &str) -> u32 {
     *number_of_container
 }
 
-fn recursive_combination(start_index: usize, current_sum: u32, target: u32, containers: &Vec<u32>, content_vector: Vec<u32>, all_possibilities: &mut Vec<Vec<u32>>){
+fn recursive_combination(
+    start_index: usize,
+    current_sum: u32,
+    target: u32,
+    containers: &Vec<u32>,
+    content_vector: Vec<u32>,
+    all_possibilities: &mut Vec<Vec<u32>>,
+) {
     for index in start_index..containers.len() {
         let sum: u32 = current_sum + containers[index];
-        if sum > target{
+        if sum > target {
             continue;
         }
         let mut cloned_vector: Vec<u32> = content_vector.clone();
         cloned_vector.push(containers[index]);
-        if sum == target{
+        if sum == target {
             all_possibilities.push(cloned_vector);
             continue;
         }
-        recursive_combination(index + 1, sum, target, containers, cloned_vector, all_possibilities);
-        
+        recursive_combination(
+            index + 1,
+            sum,
+            target,
+            containers,
+            cloned_vector,
+            all_possibilities,
+        );
     }
 }
 
@@ -67,10 +95,10 @@ fn prepare_data(input: &str) -> Vec<u32> {
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
-        Ok(content) => return content,
+        Ok(content) => content,
         Err(err) => {
             eprintln!("Error while opening the input file: {:?}", err);
             process::exit(1);
         }
-    };
+    }
 }

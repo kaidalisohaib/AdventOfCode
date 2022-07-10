@@ -3,9 +3,9 @@ use game::*;
 use priority_queue::PriorityQueue;
 use std::{fs, process};
 
-const start_life: u32 = 50;
-const start_mana: u32 = 500;
-
+const START_LIFE: u32 = 50;
+const START_MANA: u32 = 500;
+type GameInfo = (Player, Boss, Vec<(Effects, u32)>, Cast);
 fn main() {
     let file_content: String = read_input_file();
     println!("Input:\n{}", file_content);
@@ -17,11 +17,10 @@ fn main() {
 }
 
 fn solve_part_one(input: &str) -> i32 {
-    let mut initial_boss: Boss = read_boss_data(input);
-    let mut initial_player: Player = Player::new(start_life, start_mana, 0);
+    let initial_boss: Boss = read_boss_data(input);
+    let mut initial_player: Player = Player::new(START_LIFE, START_MANA, 0);
     let avaible_casts: Vec<Cast> = avaible_casts_with_mana(initial_player.get_mana(), &Vec::new());
-    let mut less_spent_mana: PriorityQueue<(Player, Boss, Vec<(Effects, u32)>, Cast), i32> =
-        PriorityQueue::new();
+    let mut less_spent_mana: PriorityQueue<GameInfo, i32> = PriorityQueue::new();
     initial_player.deal_damage(1);
     for cast in avaible_casts {
         less_spent_mana.push(
@@ -42,7 +41,7 @@ fn solve_part_one(input: &str) -> i32 {
             effects.clone(),
             next_cast,
             &mut less_spent_mana,
-            mana_spent.abs() as u32,
+            mana_spent.unsigned_abs(),
             false,
         );
         if did_won {
@@ -52,11 +51,10 @@ fn solve_part_one(input: &str) -> i32 {
 }
 
 fn solve_part_two(input: &str) -> i32 {
-    let mut initial_boss: Boss = read_boss_data(input);
-    let mut initial_player: Player = Player::new(start_life, start_mana, 0);
+    let initial_boss: Boss = read_boss_data(input);
+    let initial_player: Player = Player::new(START_LIFE, START_MANA, 0);
     let avaible_casts: Vec<Cast> = avaible_casts_with_mana(initial_player.get_mana(), &Vec::new());
-    let mut less_spent_mana: PriorityQueue<(Player, Boss, Vec<(Effects, u32)>, Cast), i32> =
-        PriorityQueue::new();
+    let mut less_spent_mana: PriorityQueue<GameInfo, i32> = PriorityQueue::new();
     for cast in avaible_casts {
         less_spent_mana.push(
             (
@@ -76,7 +74,7 @@ fn solve_part_two(input: &str) -> i32 {
             effects.clone(),
             next_cast,
             &mut less_spent_mana,
-            mana_spent.abs() as u32,
+            mana_spent.unsigned_abs(),
             true,
         );
         if did_won {
@@ -90,7 +88,7 @@ fn next_round(
     mut boss: Boss,
     mut effects: Vec<(Effects, u32) /*effect and round left*/>,
     next_cast: Cast,
-    less_spent_mana: &mut PriorityQueue<(Player, Boss, Vec<(Effects, u32)>, Cast), i32>,
+    less_spent_mana: &mut PriorityQueue<GameInfo, i32>,
     mana_spent: u32,
     part_two: bool,
 ) -> bool {
@@ -120,7 +118,7 @@ fn next_round(
             player.add_armor(effect.get_delta_armor());
         }
         *round_left -= 1;
-        if *round_left <= 0 {
+        if *round_left == 0 {
             player.remove_armor(effect.get_delta_armor());
         }
     }
@@ -148,7 +146,7 @@ fn next_round(
             player.add_armor(effect.get_delta_armor());
         }
         *round_left -= 1;
-        if *round_left <= 0 {
+        if *round_left == 0 {
             player.remove_armor(effect.get_delta_armor());
         }
     }
@@ -166,9 +164,8 @@ fn next_round(
             -((mana_spent + avaible_cast.get_cost()) as i32),
         );
     }
-    return false;
+    false
 }
-
 
 fn avaible_casts_with_mana(mana: u32, effects: &Vec<(Effects, u32)>) -> Vec<Cast> {
     let mut avaible_casts: Vec<Cast> = Vec::new();
@@ -186,7 +183,7 @@ fn avaible_casts_with_mana(mana: u32, effects: &Vec<(Effects, u32)>) -> Vec<Cast
             }
         }
     }
-    return avaible_casts;
+    avaible_casts
 }
 
 fn read_boss_data(input: &str) -> Boss {
@@ -203,12 +200,12 @@ fn read_boss_data(input: &str) -> Boss {
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
-        Ok(content) => return content,
+        Ok(content) => content,
         Err(err) => {
             eprintln!("Error while opening the input file: {:?}", err);
             process::exit(1);
         }
-    };
+    }
 }
 
 mod game {
@@ -274,7 +271,7 @@ mod game {
         pub fn new(starting_life: u32, damage: u32) -> Boss {
             Boss {
                 life: starting_life as i32,
-                damage: damage,
+                damage,
             }
         }
         pub fn deal_damage(&mut self, damage: u32) {

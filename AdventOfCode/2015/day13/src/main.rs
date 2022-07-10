@@ -1,6 +1,6 @@
 use regex::{Captures, Regex};
-use std::{collections::HashMap, fs, process, thread::sleep, time::Duration};
-
+use std::{collections::HashMap, fs, process};
+type TableInfo<'a> = (HashMap<&'a str, usize>, HashMap<(usize, usize), i32>);
 fn main() {
     let file_content: String = read_input_file();
     println!("Input:\n{}", file_content);
@@ -12,39 +12,27 @@ fn main() {
 }
 
 fn solve_part_one(input: &str) -> i32 {
-    let (people_ids, happiness_table): (HashMap<&str, usize>, HashMap<(usize, usize), i32>) =
-        prepare_data(input);
-    let mut all_ids: Vec<usize> = people_ids.values().map(|x| *x).collect();
+    let (people_ids, happiness_table): TableInfo = prepare_data(input);
+    let all_ids: Vec<usize> = people_ids.values().copied().collect();
     let mut highest_happiness_value: i32 = calculate_happiness(&all_ids, &happiness_table);
-    recusive_permutation(
-        all_ids.clone(),
-        0,
-        &happiness_table,
-        &mut highest_happiness_value,
-    );
+    recusive_permutation(all_ids, 0, &happiness_table, &mut highest_happiness_value);
     highest_happiness_value
 }
 
-fn solve_part_two(input: &str) -> i32{
-    let (mut people_ids, mut happiness_table): (HashMap<&str, usize>, HashMap<(usize, usize), i32>) =
-        prepare_data(input);
+fn solve_part_two(input: &str) -> i32 {
+    let (mut people_ids, mut happiness_table): TableInfo = prepare_data(input);
     let my_id = people_ids.len() + 1;
     for id in people_ids.values() {
         happiness_table.insert((my_id, *id), 0);
         happiness_table.insert((*id, my_id), 0);
     }
     people_ids.insert("Me", my_id);
-    let mut all_ids: Vec<usize> = people_ids.values().map(|x| *x).collect();
+    let all_ids: Vec<usize> = people_ids.values().copied().collect();
     let mut highest_happiness_value: i32 = calculate_happiness(&all_ids, &happiness_table);
-    recusive_permutation(
-        all_ids.clone(),
-        0,
-        &happiness_table,
-        &mut highest_happiness_value,
-    );
+    recusive_permutation(all_ids, 0, &happiness_table, &mut highest_happiness_value);
     highest_happiness_value
 }
-
+#[allow(unused_assignments)]
 fn recusive_permutation(
     mut all_ids: Vec<usize>,
     level: usize,
@@ -78,7 +66,7 @@ fn calculate_happiness(places: &Vec<usize>, happiness_table: &HashMap<(usize, us
         let left_index: usize = {
             let temp: i32 = index as i32 - 1;
             if temp < 0 {
-                places.len() - 1 as usize
+                places.len() - 1_usize
             } else {
                 temp as usize
             }
@@ -94,10 +82,10 @@ fn calculate_happiness(places: &Vec<usize>, happiness_table: &HashMap<(usize, us
         sum += happiness_table.get(&(*id, places[left_index])).unwrap();
         sum += happiness_table.get(&(*id, places[right_index])).unwrap();
     }
-    return sum;
+    sum
 }
 
-fn prepare_data(input: &str) -> (HashMap<&str, usize>, HashMap<(usize, usize), i32>) {
+fn prepare_data(input: &str) -> TableInfo {
     let re: Regex =
         Regex::new(r"^(\w+) would (\w+) (\d+) happiness units by sitting next to (\w+).$").unwrap();
     let mut people_ids: HashMap<&str, usize> = HashMap::new();
@@ -133,10 +121,10 @@ fn prepare_data(input: &str) -> (HashMap<&str, usize>, HashMap<(usize, usize), i
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
-        Ok(content) => return content,
+        Ok(content) => content,
         Err(err) => {
             eprintln!("Error while opening the input file: {:?}", err);
             process::exit(1);
         }
-    };
+    }
 }

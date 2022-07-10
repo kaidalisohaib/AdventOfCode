@@ -15,7 +15,7 @@ fn main() {
 }
 
 fn solve_part_one(input: &str) -> u32 {
-    let mut ingredients: Vec<Vec<i32>> = prepare_data(input);
+    let ingredients: Vec<Vec<i32>> = prepare_data(input);
 
     let mut best_score: u32 = 0;
     recursive_combination(
@@ -30,7 +30,7 @@ fn solve_part_one(input: &str) -> u32 {
 }
 
 fn solve_part_two(input: &str) -> u32 {
-    let mut ingredients: Vec<Vec<i32>> = prepare_data(input);
+    let ingredients: Vec<Vec<i32>> = prepare_data(input);
 
     let mut best_score: u32 = 0;
     recursive_combination(
@@ -53,7 +53,7 @@ fn recursive_combination(
     part_two: bool,
 ) {
     if level == 1 {
-        let content_sum: u32 = (&content_list).into_iter().sum();
+        let content_sum: u32 = (&content_list).iter().sum();
         content_list.push(target - content_sum);
         let ingredients_teaspoons: Vec<(&Vec<i32>, &u32)> =
             ingredients.iter().zip(content_list.iter()).collect();
@@ -61,9 +61,8 @@ fn recursive_combination(
         if score > *best_score {
             *best_score = score;
         }
-        return;
     } else {
-        let content_sum: u32 = (&content_list).into_iter().sum();
+        let content_sum: u32 = (&content_list).iter().sum();
         for i in 0..=target - content_sum {
             let mut cloned_content_list = content_list.clone();
             cloned_content_list.push(i);
@@ -93,10 +92,10 @@ fn calculate_score(ingredients: &Vec<(&Vec<i32>, &u32)>, part_two: bool) -> u32 
         return 0;
     }
     let mut total_score: i32 = properties_sum[0];
-    for index in 1..properties_sum.len() - 1 {
-        total_score *= properties_sum[index];
+    for index in properties_sum.iter().take(properties_sum.len() - 1).skip(1) {
+        total_score *= properties_sum.get(*index as usize).unwrap();
     }
-    return total_score as u32;
+    total_score as u32
 }
 
 fn prepare_data(input: &str) -> Vec<Vec<i32>> {
@@ -132,10 +131,10 @@ fn prepare_data(input: &str) -> Vec<Vec<i32>> {
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
-        Ok(content) => return content,
+        Ok(content) => content,
         Err(err) => {
             eprintln!("Error while opening the input file: {:?}", err);
             process::exit(1);
         }
-    };
+    }
 }

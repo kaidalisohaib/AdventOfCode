@@ -31,7 +31,7 @@ fn solve_part_two(input: &str) -> u32 {
     let mut reindeers_points: Vec<u32> = vec![0; all_reindeers.len()];
     for current_time in 1..=TIME_TO_CALCULATE {
         let (mut farthest_distance, mut farthest_distance_index): (u32, usize) = (0, 0);
-        for (index, (speed, movement_time, stop_time)) in (&all_reindeers).into_iter().enumerate() {
+        for (index, (speed, movement_time, stop_time)) in (&all_reindeers).iter().enumerate() {
             let distance: u32 =
                 calculate_distance((*speed, *movement_time, *stop_time), current_time);
             if distance > farthest_distance {
@@ -84,10 +84,10 @@ fn prepare_data(input: &str) -> Vec<(u32, u32, u32)> {
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
-        Ok(content) => return content,
+        Ok(content) => content,
         Err(err) => {
             eprintln!("Error while opening the input file: {:?}", err);
             process::exit(1);
         }
-    };
+    }
 }

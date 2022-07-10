@@ -1,0 +1,45 @@
+# Apply to all files without commiting:
+#   pre-commit run --all-files
+# Update this file:
+#   pre-commit autoupdate
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: fix-byte-order-marker
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-json
+      - id: check-yaml
+      - id: check-symlinks
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+  - repo: https://github.com/pre-commit/pre-commit
+    rev: v2.19.0
+    hooks:
+      - id: validate_manifest
+  - repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+      - id: fmt
+        types: [toml]
+        args: ["--all"]
+        pass_filenames: false
+      - id: clippy
+        types: [toml]
+        args:
+          [
+            "--allow-staged",
+            "--allow-dirty",
+            "--fix",
+            "--broken-code",
+            "--",
+            "-D",
+            "warnings",
+          ]
+      - id: clippy
+        types: [toml]
+        args: ["--", "-D", "warnings"]
+      - id: cargo-check
+        types: [toml]

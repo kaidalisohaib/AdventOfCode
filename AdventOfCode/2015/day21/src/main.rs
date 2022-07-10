@@ -20,17 +20,17 @@ fn solve_part_one(input: &str) -> u32 {
             return player.get_cost();
         }
     }
-    return 0;
+    0
 }
 
 fn solve_part_two(input: &str) -> u32 {
     let (boss, cost_sorted_player_list) = prepare_data(input);
     for player in cost_sorted_player_list.iter().rev() {
-        if !does_player_win(&player, &boss) {
+        if !does_player_win(player, &boss) {
             return player.get_cost();
         }
     }
-    return 0;
+    0
 }
 
 fn does_player_win(player: &Player, boss: &Boss) -> bool {
@@ -51,7 +51,7 @@ fn does_player_win(player: &Player, boss: &Boss) -> bool {
     if boss.get_life() / player_actual_damage <= player.get_life() / boss_actual_damage {
         return true;
     }
-    return false;
+    false
 }
 
 fn recursive_combination<T: Clone + Copy + PartialEq>(
@@ -65,7 +65,6 @@ fn recursive_combination<T: Clone + Copy + PartialEq>(
         if !combinations_list.contains(&combination_list) {
             combinations_list.push(combination_list);
         }
-        return;
     } else {
         for i in next_start_index..items_list.len() {
             let mut cloned_content_list = combination_list.clone();
@@ -85,7 +84,7 @@ fn prepare_data(input: &str) -> (Boss, Vec<Player>) {
     let life_damage_armor: Vec<u32> = input
         .lines()
         .map(|x| {
-            x.split(":").collect::<Vec<&str>>()[1]
+            x.split(':').collect::<Vec<&str>>()[1]
                 .trim()
                 .parse::<u32>()
                 .unwrap()
@@ -120,18 +119,18 @@ fn prepare_data(input: &str) -> (Boss, Vec<Player>) {
             }
         }
     }
-    all_possible_players.sort_by(|a, b| a.get_cost().cmp(&b.get_cost()));
+    all_possible_players.sort_by_key(|a| a.get_cost());
     (boss, all_possible_players)
 }
 
 fn read_input_file() -> String {
     match fs::read_to_string("input.txt") {
-        Ok(content) => return content,
+        Ok(content) => content,
         Err(err) => {
             eprintln!("Error while opening the input file: {:?}", err);
             process::exit(1);
         }
-    };
+    }
 }
 
 mod game {
@@ -156,27 +155,27 @@ mod game {
                 + rings[0].get_armor()
                 + rings[1].get_armor();
             Player {
-                cost_value: cost_value,
-                damage_value: damage_value,
-                armor_value: armor_value,
+                cost_value,
+                damage_value,
+                armor_value,
                 life: crate::START_LIFE,
             }
         }
 
         pub fn get_cost(&self) -> u32 {
-            return (*self).cost_value;
+            (*self).cost_value
         }
 
         pub fn get_damage(&self) -> u32 {
-            return (*self).damage_value;
+            (*self).damage_value
         }
 
         pub fn get_armor(&self) -> u32 {
-            return (*self).armor_value;
+            (*self).armor_value
         }
 
         pub fn get_life(&self) -> u32 {
-            return (*self).life;
+            (*self).life
         }
     }
 
@@ -189,22 +188,22 @@ mod game {
     impl Boss {
         pub fn new(damage_value: u32, armor_value: u32, life: u32) -> Boss {
             Boss {
-                damage_value: damage_value,
-                armor_value: armor_value,
-                life: life,
+                damage_value,
+                armor_value,
+                life,
             }
         }
 
         pub fn get_damage(&self) -> u32 {
-            return (*self).damage_value;
+            (*self).damage_value
         }
 
         pub fn get_armor(&self) -> u32 {
-            return (*self).armor_value;
+            (*self).armor_value
         }
 
         pub fn get_life(&self) -> u32 {
-            return (*self).life;
+            (*self).life
         }
     }
 
@@ -225,29 +224,29 @@ mod game {
         const GREATAXE_STATS: (u32, u32, u32) = (75, 8, 0);
         pub fn get_cost(&self) -> u32 {
             match *self {
-                Weapons::Dagger => return Weapons::DAGGER_STATS.0,
-                Weapons::Shortsword => return Weapons::SHORTSWORD_STATS.0,
-                Weapons::Warhammer => return Weapons::WARHAMMER_STATS.0,
-                Weapons::Longsword => return Weapons::LONGSWORD_STATS.0,
-                Weapons::Greataxe => return Weapons::GREATAXE_STATS.0,
+                Weapons::Dagger => Weapons::DAGGER_STATS.0,
+                Weapons::Shortsword => Weapons::SHORTSWORD_STATS.0,
+                Weapons::Warhammer => Weapons::WARHAMMER_STATS.0,
+                Weapons::Longsword => Weapons::LONGSWORD_STATS.0,
+                Weapons::Greataxe => Weapons::GREATAXE_STATS.0,
             }
         }
         pub fn get_damage(&self) -> u32 {
             match *self {
-                Weapons::Dagger => return Weapons::DAGGER_STATS.1,
-                Weapons::Shortsword => return Weapons::SHORTSWORD_STATS.1,
-                Weapons::Warhammer => return Weapons::WARHAMMER_STATS.1,
-                Weapons::Longsword => return Weapons::LONGSWORD_STATS.1,
-                Weapons::Greataxe => return Weapons::GREATAXE_STATS.1,
+                Weapons::Dagger => Weapons::DAGGER_STATS.1,
+                Weapons::Shortsword => Weapons::SHORTSWORD_STATS.1,
+                Weapons::Warhammer => Weapons::WARHAMMER_STATS.1,
+                Weapons::Longsword => Weapons::LONGSWORD_STATS.1,
+                Weapons::Greataxe => Weapons::GREATAXE_STATS.1,
             }
         }
         pub fn get_armor(&self) -> u32 {
             match *self {
-                Weapons::Dagger => return Weapons::DAGGER_STATS.2,
-                Weapons::Shortsword => return Weapons::SHORTSWORD_STATS.2,
-                Weapons::Warhammer => return Weapons::WARHAMMER_STATS.2,
-                Weapons::Longsword => return Weapons::LONGSWORD_STATS.2,
-                Weapons::Greataxe => return Weapons::GREATAXE_STATS.2,
+                Weapons::Dagger => Weapons::DAGGER_STATS.2,
+                Weapons::Shortsword => Weapons::SHORTSWORD_STATS.2,
+                Weapons::Warhammer => Weapons::WARHAMMER_STATS.2,
+                Weapons::Longsword => Weapons::LONGSWORD_STATS.2,
+                Weapons::Greataxe => Weapons::GREATAXE_STATS.2,
             }
         }
     }
@@ -270,32 +269,32 @@ mod game {
         const PLATEMAIL_STATS: (u32, u32, u32) = (102, 0, 5);
         pub fn get_cost(&self) -> u32 {
             match *self {
-                Armors::Leather => return Armors::LEATHER_STATS.0,
-                Armors::Chainmail => return Armors::CHAINMAIL_STATS.0,
-                Armors::Splintmail => return Armors::SPLINTMAIL_STATS.0,
-                Armors::Bandedmail => return Armors::BANDEDMAIL_STATS.0,
-                Armors::Platemail => return Armors::PLATEMAIL_STATS.0,
-                Armors::None => return 0,
+                Armors::Leather => Armors::LEATHER_STATS.0,
+                Armors::Chainmail => Armors::CHAINMAIL_STATS.0,
+                Armors::Splintmail => Armors::SPLINTMAIL_STATS.0,
+                Armors::Bandedmail => Armors::BANDEDMAIL_STATS.0,
+                Armors::Platemail => Armors::PLATEMAIL_STATS.0,
+                Armors::None => 0,
             }
         }
         pub fn get_damage(&self) -> u32 {
             match *self {
-                Armors::Leather => return Armors::LEATHER_STATS.1,
-                Armors::Chainmail => return Armors::CHAINMAIL_STATS.1,
-                Armors::Splintmail => return Armors::SPLINTMAIL_STATS.1,
-                Armors::Bandedmail => return Armors::BANDEDMAIL_STATS.1,
-                Armors::Platemail => return Armors::PLATEMAIL_STATS.1,
-                Armors::None => return 0,
+                Armors::Leather => Armors::LEATHER_STATS.1,
+                Armors::Chainmail => Armors::CHAINMAIL_STATS.1,
+                Armors::Splintmail => Armors::SPLINTMAIL_STATS.1,
+                Armors::Bandedmail => Armors::BANDEDMAIL_STATS.1,
+                Armors::Platemail => Armors::PLATEMAIL_STATS.1,
+                Armors::None => 0,
             }
         }
         pub fn get_armor(&self) -> u32 {
             match *self {
-                Armors::Leather => return Armors::LEATHER_STATS.2,
-                Armors::Chainmail => return Armors::CHAINMAIL_STATS.2,
-                Armors::Splintmail => return Armors::SPLINTMAIL_STATS.2,
-                Armors::Bandedmail => return Armors::BANDEDMAIL_STATS.2,
-                Armors::Platemail => return Armors::PLATEMAIL_STATS.2,
-                Armors::None => return 0,
+                Armors::Leather => Armors::LEATHER_STATS.2,
+                Armors::Chainmail => Armors::CHAINMAIL_STATS.2,
+                Armors::Splintmail => Armors::SPLINTMAIL_STATS.2,
+                Armors::Bandedmail => Armors::BANDEDMAIL_STATS.2,
+                Armors::Platemail => Armors::PLATEMAIL_STATS.2,
+                Armors::None => 0,
             }
         }
     }
@@ -320,35 +319,35 @@ mod game {
         const DEFENSE3_STATS: (u32, u32, u32) = (80, 0, 3);
         pub fn get_cost(&self) -> u32 {
             match *self {
-                Rings::Damage1 => return Rings::DAMAGE1_STATS.0,
-                Rings::Damage2 => return Rings::DAMAGE2_STATS.0,
-                Rings::Damage3 => return Rings::DAMAGE3_STATS.0,
-                Rings::Defense1 => return Rings::DEFENSE1_STATS.0,
-                Rings::Defense2 => return Rings::DEFENSE2_STATS.0,
-                Rings::Defense3 => return Rings::DEFENSE3_STATS.0,
-                Rings::None => return 0,
+                Rings::Damage1 => Rings::DAMAGE1_STATS.0,
+                Rings::Damage2 => Rings::DAMAGE2_STATS.0,
+                Rings::Damage3 => Rings::DAMAGE3_STATS.0,
+                Rings::Defense1 => Rings::DEFENSE1_STATS.0,
+                Rings::Defense2 => Rings::DEFENSE2_STATS.0,
+                Rings::Defense3 => Rings::DEFENSE3_STATS.0,
+                Rings::None => 0,
             }
         }
         pub fn get_damage(&self) -> u32 {
             match *self {
-                Rings::Damage1 => return Rings::DAMAGE1_STATS.1,
-                Rings::Damage2 => return Rings::DAMAGE2_STATS.1,
-                Rings::Damage3 => return Rings::DAMAGE3_STATS.1,
-                Rings::Defense1 => return Rings::DEFENSE1_STATS.1,
-                Rings::Defense2 => return Rings::DEFENSE2_STATS.1,
-                Rings::Defense3 => return Rings::DEFENSE3_STATS.1,
-                Rings::None => return 0,
+                Rings::Damage1 => Rings::DAMAGE1_STATS.1,
+                Rings::Damage2 => Rings::DAMAGE2_STATS.1,
+                Rings::Damage3 => Rings::DAMAGE3_STATS.1,
+                Rings::Defense1 => Rings::DEFENSE1_STATS.1,
+                Rings::Defense2 => Rings::DEFENSE2_STATS.1,
+                Rings::Defense3 => Rings::DEFENSE3_STATS.1,
+                Rings::None => 0,
             }
         }
         pub fn get_armor(&self) -> u32 {
             match *self {
-                Rings::Damage1 => return Rings::DAMAGE1_STATS.2,
-                Rings::Damage2 => return Rings::DAMAGE2_STATS.2,
-                Rings::Damage3 => return Rings::DAMAGE3_STATS.2,
-                Rings::Defense1 => return Rings::DEFENSE1_STATS.2,
-                Rings::Defense2 => return Rings::DEFENSE2_STATS.2,
-                Rings::Defense3 => return Rings::DEFENSE3_STATS.2,
-                Rings::None => return 0,
+                Rings::Damage1 => Rings::DAMAGE1_STATS.2,
+                Rings::Damage2 => Rings::DAMAGE2_STATS.2,
+                Rings::Damage3 => Rings::DAMAGE3_STATS.2,
+                Rings::Defense1 => Rings::DEFENSE1_STATS.2,
+                Rings::Defense2 => Rings::DEFENSE2_STATS.2,
+                Rings::Defense3 => Rings::DEFENSE3_STATS.2,
+                Rings::None => 0,
             }
         }
     }
