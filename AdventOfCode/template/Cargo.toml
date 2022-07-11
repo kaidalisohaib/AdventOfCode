@@ -1,5 +1,7 @@
+[workspace]
+
 [package]
-name = "day1"
+name = "template"
 version = "0.1.0"
 edition = "2021"
 
