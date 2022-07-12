@@ -1,2 +1,0 @@
-[workspace]
-members = ["./AdventOfCode/2016/*/", "./AdventOfCode/2015/*/"]

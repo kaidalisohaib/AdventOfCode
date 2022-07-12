@@ -19,27 +19,3 @@ repos:
     rev: v2.19.0
     hooks:
       - id: validate_manifest
-  - repo: https://github.com/doublify/pre-commit-rust
-    rev: v1.0
-    hooks:
-      - id: fmt
-        types: [toml]
-        args: ["--all"]
-        pass_filenames: false
-      - id: clippy
-        types: [toml]
-        args:
-          [
-            "--allow-staged",
-            "--allow-dirty",
-            "--fix",
-            "--broken-code",
-            "--",
-            "-D",
-            "warnings",
-          ]
-      - id: clippy
-        types: [toml]
-        args: ["--", "-D", "warnings"]
-      - id: cargo-check
-        types: [toml]
